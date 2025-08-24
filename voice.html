@@ -1,11 +1,21 @@
 <!DOCTYPE html><html lang="tr"><head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Sesli Sohbet</title>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sesli Sohbet · Profil Analizi</title>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 <style>
-  html,body{height:100%;margin:0;background:#0b1020;display:grid;place-items:center}
-  elevenlabs-convai{display:block;width:100%;max-width:620px;height:100px}
-</style>
-</head><body>
-  <elevenlabs-convai agent-id="agent_4001k3ed12paf7b9vtfkf3w6ypt8"></elevenlabs-convai>
+  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#0b1020;color:#e9ecf5;font:16px/1.5 system-ui,Segoe UI,Roboto,Arial;padding:24px}
+  .card{max-width:700px;width:100%;padding:28px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);text-align:center}
+  .box{margin:20px auto;max-width:600px;padding:20px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+  elevenlabs-convai{display:block;height:90px}
+  .back{position:absolute;left:16px;top:16px}
+</style></head><body>
+<main class="card">
+  <button class="back" onclick="history.back()">← Geri</button>
+  <h2>Sesli Sohbet</h2>
+  <p>Görüşme en fazla 5 dakika sürecektir. Hazırsanız başlayabilirsiniz.</p>
+  <section class="box">
+    <elevenlabs-convai agent-id="agent_4001k3ed12paf7b9vtfkf3w6ypt8"></elevenlabs-convai>
+  </section>
+  <p style="color:#8ea0c8">Veriler yalnızca eğitim kişiselleştirme amacıyla işlenir.</p>
+</main>
 </body></html>
