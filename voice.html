@@ -11,7 +11,6 @@
   <style>
     :root{
       --bg:#0b1020; --fg:#e9ecf5; --muted:#a0a8c0; --stroke: rgba(255,255,255,.12);
-      --g1:#79a7ff; --g2:#c999ff;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -24,20 +23,35 @@
       -webkit-font-smoothing: antialiased;
     }
     .card{
-      width:100%; max-width:900px;
+      width:100%; max-width:700px;
       background: linear-gradient( to bottom, rgba(255,255,255,.06), rgba(255,255,255,.03) );
       border:1px solid var(--stroke); border-radius:20px; padding:28px;
       box-shadow:0 10px 40px rgba(0,0,0,.35); text-align:center; animation: show .45s ease;
       backdrop-filter: blur(8px);
     }
     @keyframes show{from{opacity:0; transform: translateY(8px)} to{opacity:1; transform:none}}
-    h2{margin:2px 0 10px; font-size: clamp(1.6rem, 2.2vw + .8rem, 2.3rem)}
-    .lead{color:var(--muted); margin:0 0 18px}
-    .box{
-      background: linear-gradient(90deg, rgba(121,167,255,.12), rgba(201,153,255,.12));
-      border:1px solid var(--stroke);
-      border-radius:14px; padding:22px; margin: 18px 0 8px;
+    h2{margin:2px 0 16px; font-size: clamp(1.6rem, 2.2vw + .8rem, 2.3rem)}
+    .note{font-size:.95rem; color:#8ea0c8; margin-top:14px}
+
+    .box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 20px auto;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
     }
+    elevenlabs-convai {
+      display: block;
+      max-width: 100%;
+      height: 90px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
     .toolbar{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px}
     .back{
       appearance:none; border:1px solid var(--stroke);
@@ -47,7 +61,6 @@
       transition: transform .2s ease, background .2s ease;
     }
     .back:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08) }
-    .note{font-size:.95rem; color:#8ea0c8}
   </style>
 </head>
 <body>
@@ -58,22 +71,18 @@
     </div>
 
     <h2>Sesli Sohbet</h2>
-    <p class="lead">Görüşme en fazla 5 dakika sürecektir. Hazırsanız başlayabilirsiniz.</p>
 
     <section class="box">
       <!-- ElevenLabs Voice Agent Embed -->
       <elevenlabs-convai agent-id="agent_4001k3ed12paf7b9vtfkf3w6ypt8"></elevenlabs-convai>
-      <p class="note" style="margin-top:14px">
-        Görüşme tamamlandığında bir sonraki adıma geçebilirsiniz.
-      </p>
+
+      <!-- Taşınmış yazı burada -->
+      <p class="note">Görüşme en fazla 5 dakika sürecektir. Hazırsanız başlayabilirsiniz.</p>
+
+      <p class="note">Görüşme tamamlandığında bir sonraki adıma geçebilirsiniz.</p>
     </section>
 
     <p class="note">Veriler yalnızca eğitim kişiselleştirme amacıyla işlenir; üçüncü taraflarla paylaşılmaz.</p>
   </main>
-
-  <script>
-    // İstersen demo amaçlı otomatik yönlendirme:
-    // setTimeout(() => location.href = 'index.html', 300000); // 5 dakika
-  </script>
 </body>
 </html>
