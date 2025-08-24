@@ -1,84 +1,140 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sesli Sohbet</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Kişiselleştirilmiş Profil Analizi</title>
 
-  <!-- ElevenLabs Widget Script -->
-  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+  <!-- Minimal, temiz font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #f9f9fb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+    :root{
+      --bg: #0b1020;           /* koyu arka plan */
+      --fg: #e9ecf5;           /* açık metin */
+      --muted:#a0a8c0;         /* ikincil metin */
+      --glass: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --grad1:#79a7ff;         /* vurgu degrade */
+      --grad2:#c999ff;
+      --cta:#7c8cff;           /* buton rengi */
     }
-    .card {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-      max-width: 700px;
-      width: 100%;
-      padding: 32px;
-      text-align: center;
-      animation: fadeIn 0.6s ease-in;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: radial-gradient(1200px 1200px at 80% 10%, rgba(124,140,255,.12), transparent 40%),
+                  radial-gradient(900px 900px at 20% 80%, rgba(201,153,255,.10), transparent 40%),
+                  var(--bg);
+      color: var(--fg);
+      display:flex; align-items:center; justify-content:center;
+      -webkit-font-smoothing: antialiased;  text-rendering: optimizeLegibility;
     }
-    .card h2 {
-      font-size: 1.8rem;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+
+    /* arka plan blur blob */
+    .blob{
+      position: fixed; inset: 0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(600px 600px at 70% 30%, rgba(121,167,255,.20), transparent 60%),
+        radial-gradient(500px 500px at 30% 70%, rgba(201,153,255,.18), transparent 60%);
+      filter: blur(40px);
+      opacity:.9;
     }
-    .card p {
-      color: #555;
-      margin-bottom: 16px;
+
+    .wrap{
+      z-index:1;
+      width:100%; max-width: 980px; padding: 40px 20px; margin:auto; text-align:center;
     }
-    .agent-box {
-      background: linear-gradient(to right, rgba(0,128,255,0.1), rgba(128,0,255,0.1));
-      border-radius: 12px;
-      padding: 24px;
-      margin: 24px 0;
+
+    .card{
+      margin: 0 auto; padding: 48px 32px; max-width: 860px;
+      background: linear-gradient( to bottom, rgba(255,255,255,.06), rgba(255,255,255,.03) );
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+      animation: rise .6s ease both;
     }
-    .note {
-      font-size: 0.9rem;
-      color: #777;
-      margin-top: 16px;
+
+    h1{
+      margin:0 0 14px;
+      font-size: clamp(2.2rem, 4vw + 1rem, 4rem);
+      letter-spacing:-0.02em;
     }
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(10px);}
-      to {opacity: 1; transform: translateY(0);}
+    .grad{
+      background: linear-gradient(90deg, var(--grad1), var(--grad2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
     }
+
+    p.sub{
+      margin:0 auto 28px; max-width: 760px;
+      font-size: clamp(1rem, .9rem + .5vw, 1.25rem);
+      color: var(--muted);
+    }
+
+    .cta{
+      appearance:none; border: 1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(124,140,255,.95), rgba(124,140,255,.85));
+      color:#0b0f1e; font-weight:700;
+      padding:14px 22px; border-radius: 12px;
+      display:inline-flex; align-items:center; gap:10px; cursor:pointer;
+      box-shadow: 0 10px 24px rgba(124,140,255,.28);
+      transform: translateZ(0);
+      transition: transform .2s ease, box-shadow .2s ease, opacity .25s ease;
+    }
+    .cta:hover{ transform: translateY(-1px); box-shadow:0 16px 36px rgba(124,140,255,.34) }
+    .cta:active{ transform: translateY(0); box-shadow:0 8px 18px rgba(124,140,255,.24) }
+    .arrow{ display:inline-block; transition: transform .25s ease }
+    .cta:hover .arrow{ transform: translateX(4px) }
+
+    .legal{ margin-top:14px; color:#8d96b3; font-size:.9rem }
+
+    /* çıkış animasyonu */
+    .leaving{ animation: leave .45s ease forwards }
+    @keyframes rise{ from{opacity:0; transform: translateY(10px)} to{opacity:1; transform:none} }
+    @keyframes leave{ to{ opacity:0; transform: scale(.985) translateY(8px) } }
+
+    /* alt köşe sosyal (opsiyonel) */
+    .fab{
+      position: fixed; right:18px; bottom:18px; z-index:5;
+      width:44px; height:44px; border-radius:999px; display:grid; place-items:center;
+      background: linear-gradient(180deg, var(--glass), rgba(255,255,255,.04));
+      border:1px solid var(--stroke);
+      color:#c7d2fe; text-decoration:none; font-weight:700;
+      box-shadow: 0 8px 18px rgba(0,0,0,.35);
+      transition: transform .2s ease; backdrop-filter: blur(8px);
+    }
+    .fab:hover{ transform: translateY(-2px) }
   </style>
 </head>
 <body>
+  <div class="blob" aria-hidden="true"></div>
 
-  <div class="card">
-    <h2>🎙️ Sesli Sohbet</h2>
-    <p>Görüşme en fazla 5 dakika sürecektir. Hazırsanız başlayabilirsiniz.</p>
+  <main class="wrap" id="root">
+    <section class="card">
+      <h1>Kişiselleştirilmiş <span class="grad">Profil Analizi</span></h1>
+      <p class="sub">
+        Bu kısa çalışma, yapay zekâ okuryazarlığınızı ve öğrenme eğilimlerinizi 3–4 dakikada çıktıya dönüştürür.
+        Sonuçlar yalnızca eğitmenle paylaşılır.
+      </p>
 
-    <div class="agent-box">
-      <!-- ElevenLabs Voice Agent Embed -->
-      <elevenlabs-convai agent-id="agent_4001k3ed12paf7b9vtfkf3w6ypt8"></elevenlabs-convai>
-    </div>
+      <button id="start" class="cta" aria-label="Analize Başla">
+        <span class="arrow">➜</span> Başlayalım
+      </button>
 
-    <p class="note">Görüşme tamamlandığında otomatik olarak bir sonraki adıma geçeceksiniz.</p>
-  </div>
+      <div class="legal">Devam ederek Aydınlatma Metni ve KVKK koşullarını kabul etmiş olursunuz.</div>
+    </section>
+  </main>
+
+  <a class="fab" href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
 
   <script>
-    // 5 dakikalık otomatik bitirme (demo amaçlı)
-    setTimeout(() => {
-      alert("Görüşme süresi sona erdi. Otomatik olarak sonraki adıma yönlendiriliyorsunuz.");
-      // Burada yönlendirme ya da onComplete() tetiklenebilir
-      window.location.href = "/sonraki-adim.html"; 
-    }, 300000); // 300.000ms = 5 dakika
+    const root = document.getElementById('root');
+    const btn  = document.getElementById('start');
+    btn.addEventListener('click', () => {
+      root.classList.add('leaving');                      // hafif fade/scale
+      setTimeout(() => { window.location.href = 'voice.html'; }, 420); // sonra voice
+    });
   </script>
-
 </body>
 </html>
