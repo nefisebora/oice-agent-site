@@ -7,6 +7,7 @@
 
   <!-- Minimal, temiz font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
   <style>
     :root{
@@ -17,7 +18,6 @@
       --stroke: rgba(255,255,255,.12);
       --grad1:#79a7ff;         /* vurgu degrade */
       --grad2:#c999ff;
-      --cta:#7c8cff;           /* buton rengi */
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -31,7 +31,6 @@
       -webkit-font-smoothing: antialiased;  text-rendering: optimizeLegibility;
     }
 
-    /* arka plan blur blob */
     .blob{
       position: fixed; inset: 0; pointer-events:none; z-index:0;
       background:
@@ -57,7 +56,7 @@
     }
 
     h1{
-      margin:0 0 14px;
+      margin:0 0 28px;
       font-size: clamp(2.2rem, 4vw + 1rem, 4rem);
       letter-spacing:-0.02em;
     }
@@ -72,29 +71,17 @@
       color: var(--muted);
     }
 
-    .cta{
-      appearance:none; border: 1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(124,140,255,.95), rgba(124,140,255,.85));
-      color:#0b0f1e; font-weight:700;
-      padding:14px 22px; border-radius: 12px;
-      display:inline-flex; align-items:center; gap:10px; cursor:pointer;
-      box-shadow: 0 10px 24px rgba(124,140,255,.28);
-      transform: translateZ(0);
-      transition: transform .2s ease, box-shadow .2s ease, opacity .25s ease;
+    elevenlabs-convai{
+      display:block;
+      max-width: 100%;
+      height: 100px;
+      border-radius: 12px;
+      overflow:hidden;
+      margin: 0 auto;
     }
-    .cta:hover{ transform: translateY(-1px); box-shadow:0 16px 36px rgba(124,140,255,.34) }
-    .cta:active{ transform: translateY(0); box-shadow:0 8px 18px rgba(124,140,255,.24) }
-    .arrow{ display:inline-block; transition: transform .25s ease }
-    .cta:hover .arrow{ transform: translateX(4px) }
 
-    .legal{ margin-top:14px; color:#8d96b3; font-size:.9rem }
-
-    /* çıkış animasyonu */
-    .leaving{ animation: leave .45s ease forwards }
     @keyframes rise{ from{opacity:0; transform: translateY(10px)} to{opacity:1; transform:none} }
-    @keyframes leave{ to{ opacity:0; transform: scale(.985) translateY(8px) } }
 
-    /* alt köşe sosyal (opsiyonel) */
     .fab{
       position: fixed; right:18px; bottom:18px; z-index:5;
       width:44px; height:44px; border-radius:999px; display:grid; place-items:center;
@@ -110,7 +97,7 @@
 <body>
   <div class="blob" aria-hidden="true"></div>
 
-  <main class="wrap" id="root">
+  <main class="wrap">
     <section class="card">
       <h1>Kişiselleştirilmiş <span class="grad">Profil Analizi</span></h1>
       <p class="sub">
@@ -118,23 +105,11 @@
         Sonuçlar yalnızca eğitmenle paylaşılır.
       </p>
 
-      <button id="start" class="cta" aria-label="Analize Başla">
-        <span class="arrow">➜</span> Başlayalım
-      </button>
-
-      <div class="legal">Devam ederek Aydınlatma Metni ve KVKK koşullarını kabul etmiş olursunuz.</div>
+      <!-- Voice Agent direkt burada -->
+      <elevenlabs-convai agent-id="agent_4001k3ed12paf7b9vtfkf3w6ypt8"></elevenlabs-convai>
     </section>
   </main>
 
-  <a class="fab" href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
-
-  <script>
-    const root = document.getElementById('root');
-    const btn  = document.getElementById('start');
-    btn.addEventListener('click', () => {
-      root.classList.add('leaving');                      // hafif fade/scale
-      setTimeout(() => { window.location.href = 'voice.html'; }, 420); // sonra voice
-    });
-  </script>
+  <a class="fab" href="https://www.linkedin.com/in/nefisebora/" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
 </body>
 </html>
