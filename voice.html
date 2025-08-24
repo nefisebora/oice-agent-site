@@ -18,50 +18,67 @@
                   radial-gradient(800px 800px at 20% 80%, rgba(201,153,255,.11), transparent 45%),
                   var(--bg);
       color: var(--fg); display:flex; align-items:center; justify-content:center; padding:24px;
+      -webkit-font-smoothing: antialiased;
     }
     .card{
       width:100%; max-width:700px;
       background: linear-gradient( to bottom, rgba(255,255,255,.06), rgba(255,255,255,.03) );
       border:1px solid var(--stroke); border-radius:20px; padding:28px;
       box-shadow:0 10px 40px rgba(0,0,0,.35); text-align:center;
+      backdrop-filter: blur(8px);
     }
-    .toolbar{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px}
+    .toolbar{display:flex; justify-content:flex-start; align-items:center; gap:10px; margin-bottom:6px}
     .back{
       appearance:none; border:1px solid var(--stroke);
       background: rgba(255,255,255,.06); color:#cfd6ff;
       padding:10px 14px; border-radius:10px; cursor:pointer;
     }
-    h2{margin:2px 0 16px; font-size: clamp(1.6rem, 2.2vw + .8rem, 2.3rem)}
+    /* Sade kapsayıcı */
     .box{
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
-      padding: 24px;
-      margin: 20px auto;
+      padding: 18px;
+      margin: 8px auto 16px;
       max-width: 600px;
       text-align: center;
       box-shadow: 0 8px 20px rgba(0,0,0,0.25);
     }
-    elevenlabs-convai{ display:block; max-width:100%; height:90px; border-radius:12px; overflow:hidden }
-    .note{font-size:.95rem; color:#8ea0c8; margin-top:14px}
+    /* ElevenLabs widget */
+    elevenlabs-convai{
+      display:block;
+      max-width:100%;
+      height:90px;
+      border-radius:12px;
+      overflow:hidden;
+      margin:0 auto;
+    }
+    .note{font-size:.95rem; color:#8ea0c8; margin-top:10px}
   </style>
 </head>
 <body>
   <main class="card">
     <div class="toolbar">
       <button class="back" onclick="history.back()">← Geri</button>
-      <div></div>
     </div>
 
-    <h2>Sesli Sohbet</h2>
-
     <section class="box">
-      <!-- Burada artık mikrofon yazısı YOK, yerine ajan butonu var -->
+      <!-- Sadece agent butonu -->
       <elevenlabs-convai agent-id="agent_4001k3ed12paf7b9vtfkf3w6ypt8"></elevenlabs-convai>
     </section>
 
     <p class="note">Görüşme tamamlandığında bir sonraki adıma geçebilirsiniz.</p>
     <p class="note">Veriler yalnızca eğitim kişiselleştirme amacıyla işlenir; üçüncü taraflarla paylaşılmaz.</p>
   </main>
+
+  <!-- Mikrofon iznini önden iste: ElevenLabs'in "mikrofon izni" yazısı görünmesin -->
+  <script>
+    window.addEventListener("load", () => {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .catch(() => { /* kullanıcı reddederse yapacak bir şey yok; widget kendi uyarısını gösterir */ });
+      }
+    });
+  </script>
 </body>
 </html>
