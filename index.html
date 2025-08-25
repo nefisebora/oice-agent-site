@@ -1,104 +1,119 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profil Görüşmesi</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Kişiselleştirilmiş Profil Analizi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #fafafa;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+    :root{
+      --bg: #0b1020;
+      --fg: #e9ecf5;
+      --muted:#a0a8c0;
+      --glass: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.12);
+      --grad1:#79a7ff;
+      --grad2:#c999ff;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: radial-gradient(1200px 1200px at 80% 10%, rgba(124,140,255,.12), transparent 40%),
+                  radial-gradient(900px 900px at 20% 80%, rgba(201,153,255,.10), transparent 40%),
+                  var(--bg);
+      color: var(--fg);
+      display:flex; flex-direction:column; justify-content:space-between;
+      min-height:100vh;
     }
 
-    .container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+    .blob{
+      position: fixed; inset: 0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(600px 600px at 70% 30%, rgba(121,167,255,.20), transparent 60%),
+        radial-gradient(500px 500px at 30% 70%, rgba(201,153,255,.18), transparent 60%);
+      filter: blur(40px);
+      opacity:.9;
+    }
+
+    .wrap{
+      z-index:1;
+      width:100%; max-width: 980px; padding: 40px 20px; margin:auto; text-align:center;
+    }
+
+    .card{
+      margin: 0 auto; padding: 48px 32px; max-width: 860px;
+      background: linear-gradient( to bottom, rgba(255,255,255,.06), rgba(255,255,255,.03) );
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+      animation: rise .6s ease both;
+    }
+
+    h1{
+      margin:0 0 28px;
+      font-size: clamp(2.2rem, 4vw + 1rem, 4rem);
+      letter-spacing:-0.02em;
+    }
+    .grad{
+      background: linear-gradient(90deg, var(--grad1), var(--grad2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+
+    p.sub{
+      margin:0 auto 28px; max-width: 760px;
+      font-size: clamp(1rem, .9rem + .5vw, 1.25rem);
+      color: var(--muted);
+    }
+
+    @keyframes rise{ from{opacity:0; transform: translateY(10px)} to{opacity:1; transform:none} }
+
+    .fab{
+      position: fixed; right:18px; bottom:18px; z-index:5;
+      width:44px; height:44px; border-radius:999px; display:grid; place-items:center;
+      background: linear-gradient(180deg, var(--glass), rgba(255,255,255,.04));
+      border:1px solid var(--stroke);
+      color:#c7d2fe; text-decoration:none; font-weight:700;
+      box-shadow: 0 8px 18px rgba(0,0,0,.35);
+      transition: transform .2s ease; backdrop-filter: blur(8px);
+    }
+    .fab:hover{ transform: translateY(-2px) }
+
+    footer{
+      font-size: 0.75rem; /* küçük puntolu */
+      color: var(--muted);
       text-align: center;
       padding: 20px;
-    }
-
-    .description {
-      font-size: 16px;
-      max-width: 600px;
-      margin-bottom: 10px;
-    }
-
-    .mic-warning {
-      font-size: 11px; /* açıklamadan 5 punto daha küçük */
-      color: #333;
-      margin-bottom: 30px;
-    }
-
-    .button {
-      background-color: #0066cc;
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      font-size: 14px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .button:hover {
-      background-color: #005bb5;
-    }
-
-    footer.terms {
-      font-size: 10px;
-      color: #555;
-      text-align: center;
-      line-height: 1.4;
-      padding: 20px;
-      border-top: 1px solid #ddd;
-      background-color: #f9f9f9;
-      margin-top: auto; /* sayfanın en altına iter */
-    }
-
-    footer.terms h4 {
-      font-size: 11px;
-      margin-bottom: 5px;
-    }
-
-    footer.terms p {
-      margin: 5px 0;
+      border-top: 1px solid var(--stroke);
+      background: rgba(255,255,255,.02);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <p class="description">
-      Bu kısa çalışma, yapay zekâ okuryazarlığınızı ve öğrenme eğilimlerinizi birkaç soru ile analiz eder. 
-      Sonuçlar yalnızca eğitmenle paylaşılır.
-    </p>
+  <div class="blob" aria-hidden="true"></div>
+  <main class="wrap">
+    <section class="card">
+      <h1>Kişiselleştirilmiş <span class="grad">Profil Analizi</span></h1>
+      <p class="sub">
+        Bu kısa çalışma, yapay zekâ okuryazarlığınızı ve öğrenme eğilimlerinizi birkaç soru ile analiz eder.
+        Sonuçlar yalnızca eğitmenle paylaşılır.
+      </p>
+    </section>  
+  </main>
 
-    <p class="mic-warning">
-      🔔 Görüşmeye başlamadan önce tarayıcınızın sol üst kısmından mikrofon erişimine izin vermeniz gerekmektedir.
-    </p>
+  <elevenlabs-convai agent-id="agent_4001k3ed12paf7b9vtfkf3w6ypt8"></elevenlabs-convai>
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
-    <button class="button">Kabul Et</button>
-  </div>
-
-  <footer class="terms">
-    <h4>Kullanım Koşulları</h4>
-    <p><strong>"Kabul Et"</strong> butonuna tıklayarak şu koşulları onaylamış oluyorsunuz:</p>
-    <p>
-      Görüşmeniz yazıya dökülecektir ve yalnızca eğitim amaçlı kullanılacaktır. 
-      Ses kaydı <strong>alınmayacaktır</strong>. Transkriptler en fazla 
-      <strong>90 gün</strong> saklanacak ve yalnızca güvenli ortamlarda (ör. Google Sheets) analiz için kullanılacaktır.  
-      Veriler eğitim bağlamı dışında paylaşılmayacak veya pazarlama amaçlı kullanılmayacaktır.
-    </p>
-    <p>
-      Eğer konuşmanızın yazıya dökülmesini ve analiz edilmesini istemiyorsanız, lütfen bu servisi kullanmayınız.
-    </p>
+  <footer>
+    Görüşmeye başla diyerek şu koşulları onaylamış oluyorsunuz.<br/><br/>
+    Görüşmeniz yazıya dökülecek ve yalnızca eğitim amaçlı kullanılacaktır. Ses kaydı <b>alınmayacaktır</b>.
+    Transkriptler en fazla <b>90 gün</b> saklanacak ve yalnızca analiz için kullanılacaktır. 
+    Verileriniz eğitim bağlamı dışında paylaşılmayacak veya pazarlama amacıyla kullanılmayacaktır.
   </footer>
+
+  <a class="fab" href="https://www.linkedin.com/in/nefisebora/" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
 </body>
 </html>
